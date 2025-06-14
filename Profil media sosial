@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>ROMDAN POLE OFFICIAL</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      text-align: center;
+    }
+    .container {
+      padding: 50px 20px;
+    }
+    img {
+      width: 160px;
+      height: 220px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(255, 0, 80, 0.4);
+      transition: transform 0.3s ease;
+    }
+    img:hover {
+      transform: scale(1.05);
+    }
+    h1 {
+      font-size: 22px;
+      margin-top: 20px;
+      color: #ccc;
+    }
+    h2 {
+      font-size: 30px;
+      color: #ff0050;
+      margin: 10px 0;
+    }
+    p {
+      font-size: 16px;
+      color: #aaa;
+    }
+    .btn {
+      margin-top: 25px;
+      display: inline-block;
+      padding: 12px 28px;
+      background: #ff0050;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background: #e60045;
+    }
+    .btn i {
+      margin-right: 8px;
+    }
+  </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <img src="Screenshot_20250407_021817_CapCut.jpg" alt="Romdan">
+    <h1>Selamat Datang di Website Kami</h1>
+    <h2>@Romdan-pole</h2>
+    <p>Jangan lupa follow sosial media kami!</p>
+    <a class="btn" href="https://www.tiktok.com/@romdanpole" target="_blank"><i class="fab fa-tiktok"></i>Follow</a>
+  <a href="https://www.tiktok.com/@romdan_pole?_t=ZS-8xBoQO7ldCC&_r=1" class="btn">🎵 Follow</a>
+  <a href="https://www.instagram.com/romdanpole" class="btn instagram">📸 Instagram</a>
+ 
+  </div>
+</body>
+</html>
