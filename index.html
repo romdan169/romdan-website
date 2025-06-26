@@ -1,204 +1,412 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Mading Queen + Fitur</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      background: #f0f0f0;
-      text-align: center;
-      padding-bottom: 80px; /* space for WA btn */
-    }
-    .halaman {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      padding: 20px;
-      position: absolute;
-      width: 100%;
-      max-width: 480px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: white;
-      box-shadow: 0 0 10px #ccc;
-      border-radius: 8px;
-      margin-top: 20px;
-    }
-    .aktif {
-      display: block;
-      opacity: 1;
-    }
-    img.logo {
-      width: 100px;
-      margin-top: 30px;
-    }
-    h1, h2, h3 {
-      margin: 10px 0;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: royalblue;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    table {
-      margin: 20px auto;
-[15/6, 09.33] ChatGPT: border-collapse: collapse;
-      width: 90%;
-      max-width: 400px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #aaa;
-    }
-    th {
-      background-color: royalblue;
-      color: white;
-    }
-    .wa-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #25D366;
-      color: white;
-      padding: 14px 18px;
-      border-radius: 50%;
-      font-size: 22px;
-      text-decoration: none;
-      box-shadow: 0 0 6px #1ebe5b;
-      z-index: 1000;
-    }
-    /* Galeri */
-    .galeri-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    .galeri-container img {
-      width: 100px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 6px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: border-color 0.3s ease;
-    }
-    .galeri-container img:hover {
-      border-color: royalblue;
-    }
-    /* Overlay untuk gambar */
-    #overlay {
-      position: fixed;
-      top:0; left:0; right:0; bottom:0;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-    #overlay img {
-      max-width: 90%;
-      max-height: 80%;
-      border-radius: 10px;
-[15/6, 09.33] ChatGPT: box-shadow: 0 0 20px #000;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Attendance System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .attendance-card {
+            transition: all 0.3s ease;
+        }
+        .attendance-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-indigo-800">Smart Attendance</h1>
+                <p class="text-gray-600">Track your work hours efficiently</p>
+            </div>
+            <div class="text-right">
+                <div id="current-time" class="text-2xl font-semibold text-gray-700"></div>
+                <div id="current-date" class="text-gray-500"></div>
+            </div>
+        </header>
 
-<!-- Halaman 1 -->
-<div id="hal1" class="halaman aktif">
-  <img src="logo.png" alt="Logo" class="logo" />
-  <h1>Pondok Pesantren Queen Ainul Yaqien</h1>
-  <p>Jl. Pesantren No. 99, Sukamaju<br />0812-3456-7890</p>
-  
-  <h3>Pengumuman</h3>
-  <p><b>Libur Nasional pada Jumat 17 Juni 2025</b></p>
-  
-  <h3>Jadwal Sholat Hari Ini</h3>
-  <table>
-    <tr><th>Subuh</th><td>04:25</td></tr>
-    <tr><th>Dzuhur</th><td>12:00</td></tr>
-    <tr><th>Ashar</th><td>15:15</td></tr>
-    <tr><th>Maghrib</th><td>18:05</td></tr>
-    <tr><th>Isya</th><td>19:20</td></tr>
-  </table>
-  
-  <button onclick="pindah('hal1','hal2')">Lihat Jadwal Piket</button>
-  <button onclick="pindah('hal1','hal3')">Lihat Galeri Foto</button>
-</div>
+        <!-- Status Card -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 attendance-card pulse border-l-4 border-indigo-500">
+            <h2 class="text-xl font-semibold mb-2">Current Status</h2>
+            <div class="flex items-center justify-between">
+                <div>
+                    <span id="status-text" class="text-lg font-medium">-</span>
+                    <p id="status-time" class="text-gray-500 text-sm">-</p>
+                </div>
+                <div>
+                    <button id="clock-btn" class="px-6 py-2 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition">
+                        Clock In
+                    </button>
+                </div>
+            </div>
+        </div>
 
-<!-- Halaman 2 -->
-<div id="hal2" class="halaman">
-  <h2>Jadwal Piket Mingguan</h2>
-  <table>
-    <tr><th>Hari</th><th>Nama</th></tr>
-    <tr><td>Senin</td><td>Ana & Budi</td></tr>
-    <tr><td>Selasa</td><td>Cici & Dede</td></tr>
-    <tr><td>Rabu</td><td>Eka & Fajar</td></tr>
-    <tr><td>Kamis</td><td>Gina & Hasan</td></tr>
-    <tr><td>Jumat</td><td>Ida & Joko</td></tr>
-    <tr><td>Sabtu</td><td>Ida & Joko</td></tr>
-    <tr><td>Ahad</td><td>Ida & Joko</td></tr>
-  </table>
-[15/6, 09.33] ChatGPT: <button onclick="pindah('hal2','hal1')">Kembali</button>
-</div>
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-white rounded-xl shadow-md p-4 text-center attendance-card">
+                <p class="text-gray-500">Today's Hours</p>
+                <p id="today-hours" class="text-3xl font-bold text-indigo-600">0h 0m</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-4 text-center attendance-card">
+                <p class="text-gray-500">This Week</p>
+                <p id="week-hours" class="text-3xl font-bold text-indigo-600">0h 0m</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-4 text-center attendance-card">
+                <p class="text-gray-500">This Month</p>
+                <p id="month-hours" class="text-3xl font-bold text-indigo-600">0h 0m</p>
+            </div>
+        </div>
 
-<!-- Halaman 3 (Galeri) -->
-<div id="hal3" class="halaman">
-  <h2>Galeri Foto Pondok</h2>
-  <div class="galeri-container">
-    <img src="foto1.jpg" alt="Foto 1" onclick="zoomGambar(this)" />
-    <img src="foto2.jpg" alt="Foto 2" onclick="zoomGambar(this)" />
-    <img src="foto3.jpg" alt="Foto 3" onclick="zoomGambar(this)" />
-    <img src="foto4.jpg" alt="Foto 4" onclick="zoomGambar(this)" />
-  </div>
-  <button onclick="pindah('hal3','hal1')">Kembali</button>
-</div>
+        <!-- Tabs -->
+        <div class="mb-4">
+            <div class="flex border-b border-gray-200">
+                <button class="tab-btn active px-4 py-2 font-medium text-indigo-600 border-b-2 border-indigo-600" data-tab="today">
+                    Today
+                </button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-500 hover:text-indigo-600" data-tab="history">
+                    History
+                </button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-500 hover:text-indigo-600" data-tab="reports">
+                    Reports
+                </button>
+            </div>
+        </div>
 
-<!-- Overlay untuk zoom gambar -->
-<div id="overlay" onclick="tutupZoom()">
-  <img src="" alt="Zoomed Image" id="imgZoom" />
-</div>
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <div id="today-tab" class="active">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="today-records" class="bg-white divide-y divide-gray-200">
+                            <!-- Records will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="history-tab" class="hidden">
+                <div class="bg-white rounded-xl shadow-md p-4">
+                    <div class="flex items-center mb-4">
+                        <input type="date" id="history-date" class="border rounded p-2 mr-2">
+                        <button id="history-filter-btn" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Filter</button>
+                    </div>
+                    <div id="history-records">
+                        <!-- History records will be added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div id="reports-tab" class="hidden">
+                <div class="flex flex-wrap mb-4">
+                    <div class="w-full md:w-1/3 p-2">
+                        <div class="bg-white rounded-xl shadow-md p-4 h-full">
+                            <h3 class="font-semibold mb-2">Weekly Overview</h3>
+                            <canvas id="weekly-chart" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/3 p-2">
+                        <div class="bg-white rounded-xl shadow-md p-4 h-full">
+                            <h3 class="font-semibold mb-2">Monthly Overview</h3>
+                            <canvas id="monthly-chart" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/3 p-2">
+                        <div class="bg-white rounded-xl shadow-md p-4 h-full">
+                            <h3 class="font-semibold mb-2">Export</h3>
+                            <button id="export-btn" class="w-full mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                                Export CSV
+                            </button>
+                            <button id="print-btn" class="w-full mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                                Print Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Tombol WA -->
-<a href="https://wa.me/6281234567890" class="wa-btn" target="_blank" rel="noopener noreferrer">📱</a>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data store
+        const attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || [];
 
-<!-- Audio -->
-<audio autoplay loop hidden>
-  <source src="backsound.mp3" type="audio/mpeg" />
-</audio>
+        // DOM Elements
+        const currentTimeElement = document.getElementById('current-time');
+        const currentDateElement = document.getElementById('current-date');
+        const statusTextElement = document.getElementById('status-text');
+        const statusTimeElement = document.getElementById('status-time');
+        const clockButton = document.getElementById('clock-btn');
+        const todayHoursElement = document.getElementById('today-hours');
+        const weekHoursElement = document.getElementById('week-hours');
+        const monthHoursElement = document.getElementById('month-hours');
+        const todayRecordsElement = document.getElementById('today-records');
+        const historyRecordsElement = document.getElementById('history-records');
+        const historyDateElement = document.getElementById('history-date');
+        const historyFilterButton = document.getElementById('history-filter-btn');
+        const exportButton = document.getElementById('export-btn');
+        const printButton = document.getElementById('print-btn');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content > div');
 
-<script>
-  function pindah(dari, ke) {
-    document.getElementById(dari).classList.remove('aktif');
-    setTimeout(() => {
-      document.getElementById(dari).style.display = 'none';
-      const tujuan = document.getElementById(ke);
-      tujuan.style.display = 'block';
-      setTimeout(() => tujuan.classList.add('aktif'), 10);
-    }, 500);
-  }
+        let currentStatus = null;
+        let currentClockInTime = null;
 
-  // Zoom gambar galeri
-  function zoomGambar(img) {
-[15/6, 09.33] ChatGPT: const overlay = document.getElementById('overlay');
-    const imgZoom = document.getElementById('imgZoom');
-    imgZoom.src = img.src;
-    overlay.style.display = 'flex';
-  }
-  function tutupZoom() {
-    document.getElementById('overlay').style.display = 'none';
-  }
-</script>
+        // Initialize app
+        function init() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            loadCurrentStatus();
+            updateStats();
+            renderTodayRecords();
+            renderHistoryRecords();
+            setupCharts();
+            
+            // Set today's date as default for history filter
+            const today = new Date();
+            historyDateElement.valueAsDate = today;
+        }
 
-</body>
-</html>
+        // Update current time and date
+        function updateClock() {
+            const now = new Date();
+            currentTimeElement.textContent = now.toLocaleTimeString();
+            currentDateElement.textContent = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // Load current status from data
+        function loadCurrentStatus() {
+            const today = new Date().toLocaleDateString();
+            const todayRecords = attendanceData.filter(record => 
+                new Date(record.timestamp).toLocaleDateString() === today && 
+                record.type === 'Clock In' && 
+                !record.endTime
+            );
+            
+            if (todayRecords.length > 0) {
+                currentStatus = 'Clocked In';
+                currentClockInTime = new Date(todayRecords[0].timestamp);
+                statusTextElement.textContent = 'Clocked In';
+                statusTimeElement.textContent = `Since ${currentClockInTime.toLocaleTimeString()}`;
+                clockButton.textContent = 'Clock Out';
+                clockButton.className = 'px-6 py-2 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition';
+            } else {
+                currentStatus = 'Clocked Out';
+                statusTextElement.textContent = 'Clocked Out';
+                statusTimeElement.textContent = `Not currently working`;
+                clockButton.textContent = 'Clock In';
+                clockButton.className = 'px-6 py-2 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition';
+            }
+        }
+
+        // Handle clock in/out
+        clockButton.addEventListener('click', () => {
+            const now = new Date();
+            
+            if (currentStatus === 'Clocked Out') {
+                // Clock In
+                attendanceData.push({
+                    timestamp: now.toISOString(),
+                    type: 'Clock In',
+                    status: 'Present',
+                    endTime: null
+                });
+                
+                currentStatus = 'Clocked In';
+                currentClockInTime = now;
+                statusTextElement.textContent = 'Clocked In';
+                statusTimeElement.textContent = `Since ${now.toLocaleTimeString()}`;
+                clockButton.textContent = 'Clock Out';
+                clockButton.className = 'px-6 py-2 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition';
+            } else {
+                // Clock Out
+                const today = new Date().toLocaleDateString();
+                const todayRecords = attendanceData.filter(record => 
+                    new Date(record.timestamp).toLocaleDateString() === today && 
+                    record.type === 'Clock In' && 
+                    !record.endTime
+                );
+                
+                if (todayRecords.length > 0) {
+                    todayRecords[0].endTime = now.toISOString();
+                    attendanceData.push({
+                        timestamp: now.toISOString(),
+                        type: 'Clock Out',
+                        status: 'Completed'
+                    });
+                    
+                    currentStatus = 'Clocked Out';
+                    currentClockInTime = null;
+                    statusTextElement.textContent = 'Clocked Out';
+                    statusTimeElement.textContent = `Not currently working`;
+                    clockButton.textContent = 'Clock In';
+                    clockButton.className = 'px-6 py-2 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition';
+                }
+            }
+            
+            saveData();
+            updateStats();
+            renderTodayRecords();
+            renderHistoryRecords();
+        });
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+        }
+
+        // Update statistics
+        function updateStats() {
+            const now = new Date();
+            const today = now.toLocaleDateString();
+            const currentWeek = getWeekNumber(now);
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            // Calculate today's hours
+            const todayRecords = attendanceData.filter(record => 
+                new Date(record.timestamp).toLocaleDateString() === today
+            );
+            const todayHours = calculateTotalHours(todayRecords);
+            todayHoursElement.textContent = formatHours(todayHours);
+            
+            // Calculate this week's hours
+            const weekRecords = attendanceData.filter(record => {
+                const recordDate = new Date(record.timestamp);
+                return getWeekNumber(recordDate) === currentWeek && 
+                       recordDate.getFullYear() === currentYear;
+            });
+            const weekHours = calculateTotalHours(weekRecords);
+            weekHoursElement.textContent = formatHours(weekHours);
+            
+            // Calculate this month's hours
+            const monthRecords = attendanceData.filter(record => {
+                const recordDate = new Date(record.timestamp);
+                return recordDate.getMonth() === currentMonth && 
+                       recordDate.getFullYear() === currentYear;
+            });
+            const monthHours = calculateTotalHours(monthRecords);
+            monthHoursElement.textContent = formatHours(monthHours);
+        }
+
+        // Calculate total hours from records
+        function calculateTotalHours(records) {
+            let totalMinutes = 0;
+            const clockInRecords = records.filter(r => r.type === 'Clock In');
+            
+            clockInRecords.forEach(record => {
+                if (record.endTime) {
+                    const start = new Date(record.timestamp);
+                    const end = new Date(record.endTime);
+                    totalMinutes += (end - start) / (1000 * 60);
+                }
+            });
+            
+            return totalMinutes;
+        }
+
+        // Format hours from minutes
+        function formatHours(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = Math.floor(minutes % 60);
+            return `${hours}h ${mins}m`;
+        }
+
+        // Get week number
+        function getWeekNumber(date) {
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        }
+
+        // Render today's records
+        function renderTodayRecords() {
+            const today = new Date().toLocaleDateString();
+            const todayRecords = attendanceData.filter(record => 
+                new Date(record.timestamp).toLocaleDateString() === today
+            );
+            
+            todayRecordsElement.innerHTML = '';
+            
+            if (todayRecords.length === 0) {
+                todayRecordsElement.innerHTML = `
+                    <tr class="text-center">
+                        <td colspan="3" class="px-6 py-4 text-gray-500">No records for today yet</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            todayRecords.forEach(record => {
+                const date = new Date(record.timestamp);
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${date.toLocaleTimeString()}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        ${record.type === 'Clock In' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">
+                            ${record.type}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        ${record.status === 'Present' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'}">
+                            ${record.status}
+                        </span>
+                    </td>
+                `;
+                
+                todayRecordsElement.appendChild(row);
+            });
+        }
+
+        // Render history records
+        function renderHistoryRecords() {
+            historyRecordsElement.innerHTML = '';
+            
+            if (attendanceData.length === 0) {
+                historyRecordsElement.innerHTML = `
+                    <div class="text-center py-4 text-gray-500">No records yet</div>
+                `;
+                return;
+            }
+            
+            const groupedData = groupRecordsByDate(attendanceData);
+            
+            Object.keys(groupedData).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+                const dateHeader = document.createElement('div');
+                dateHeader.className = 'font-semibold text-lg mb-2 text-indigo-800';
+                dateHeader.textContent = new Date(date).toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+
